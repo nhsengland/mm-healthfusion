@@ -323,7 +323,7 @@ tables use `subject_id` and `charttime`, with one column per vital sign or labor
 Each extractor writes a full-source embedding table, a key CSV and metadata. These outputs are
 independent of the chosen cohort. Test mode processes the first 100 records and adds `_test100` to
 output names. Install the prerequisites in the
-[README](https://github.com/xinzhao13/mm-healthfusion/blob/main/README.md#installation).
+[README](https://github.com/nhsengland/mm-healthfusion/blob/main/README.md#installation).
 
 ### ECG embeddings
 
@@ -794,7 +794,7 @@ Outputs under `modality_permutation/` are `test_modality_permutation_metrics.csv
 `test_modality_permutation_summary.csv`.
 
 #### M3Care imputation quality
-The [03.1 M3Care Imputation Quality Check (deterioration)](https://github.com/xinzhao13/mm-healthfusion/blob/main/notebooks/03.1%20M3Care%20Imputation%20Quality%20Check%20(deterioration).ipynb) and [03.2 M3Care Imputation Quality Check (hospitalisation)](https://github.com/xinzhao13/mm-healthfusion/blob/main/notebooks/03.2%20M3Care%20Imputation%20Quality%20Check%20(hospitalisation).ipynb) notebooks in `notebooks/` evaluate M3Care's graph-based modality imputation by artificially masking originally observed modalities. They compare GCN-imputed embeddings against the corresponding original embeddings from the same model, using cosine similarity as the primary metric, alongside mean squared error (MSE), mean absolute error (MAE) and relative norm error.
+The [03.1 M3Care Imputation Quality Check (deterioration)](https://github.com/nhsengland/mm-healthfusion/blob/main/notebooks/03.1%20M3Care%20Imputation%20Quality%20Check%20(deterioration).ipynb) and [03.2 M3Care Imputation Quality Check (hospitalisation)](https://github.com/nhsengland/mm-healthfusion/blob/main/notebooks/03.2%20M3Care%20Imputation%20Quality%20Check%20(hospitalisation).ipynb) notebooks in `notebooks/` evaluate M3Care's graph-based modality imputation by artificially masking originally observed modalities. They compare GCN-imputed embeddings against the corresponding original embeddings from the same model, using cosine similarity as the primary metric, alongside mean squared error (MSE), mean absolute error (MAE) and relative norm error.
 
 Both notebooks compare models trained with and without contrastive learning, reporting imputation quality and paired differences in cosine similarity with 95% confidence intervals. For models using learned cross-modal targets, additional analyses examine target reconstruction quality and alignment between learned targets and GCN-imputed embeddings. The deterioration notebook supports selected target modalities, while the hospitalisation notebook supports selected modalities across current- and dual-window configurations.
 

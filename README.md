@@ -54,7 +54,7 @@ Cohort extraction and data preparation use [pandas](https://pandas.pydata.org/) 
 ### Clone the repository
 
 ```sh
-git clone https://github.com/xinzhao13/mm-healthfusion
+git clone https://github.com/nhsengland/mm-healthfusion
 cd mm-healthfusion
 ```
 
