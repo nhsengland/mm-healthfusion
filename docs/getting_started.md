@@ -70,7 +70,7 @@ the [API reference](api_reference.md#modality-embedding-extraction).
 ## Installation
 
 Create the project environment with uv, conda or pip, following the
-[README](https://github.com/xinzhao13/mm-healthfusion/blob/main/README.md#installation).
+[README](https://github.com/nhsengland/mm-healthfusion/blob/main/README.md#installation).
 All three routes install the same locked packages, including the embedding extractors'
 dependencies and the spaCy model. The commands in this guide assume an activated environment.
 With uv, activate `.venv` with `source .venv/bin/activate` or prefix each command with `uv run`.

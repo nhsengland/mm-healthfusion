@@ -1,8 +1,8 @@
 site_name: mm-healthfusion
 site_description: Exploration codebase for understanding explainability and fairness in multi-modal healthcare models
-site_url: https://xinzhao13.github.io/mm-healthfusion/
-repo_url: https://github.com/xinzhao13/mm-healthfusion
-repo_name: xinzhao13/mm-healthfusion
+site_url: https://nhsengland.github.io/mm-healthfusion/
+repo_url: https://github.com/nhsengland/mm-healthfusion
+repo_name: nhsengland/mm-healthfusion
 edit_uri: edit/main/docs/
 copyright: >-
   Code released under the MIT Licence. Documentation &copy; Crown copyright, available under the

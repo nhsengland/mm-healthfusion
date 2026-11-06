@@ -12,7 +12,7 @@ interpretation. The generator does not imitate real clinical distributions. It b
 relationships between a few hidden factors and the outcome, so models train and the formats can be
 explored, but results on these files say nothing about clinical performance.
 
-The workflow has two routes. The [demo notebook](https://github.com/xinzhao13/mm-healthfusion/blob/main/notebooks/01%20Synthetic%20Data%20Demo.ipynb) 
+The workflow has two routes. The [demo notebook](https://github.com/nhsengland/mm-healthfusion/blob/main/notebooks/01%20Synthetic%20Data%20Demo.ipynb)
 runs every step on the deterioration pathway with the static MoE model. The sections after it give
 the same steps as commands, for every static model and both pathways.
 
@@ -84,7 +84,7 @@ and deterioration files also carry `subject_id` so the patient split can be chec
 
 ## Demo notebook: from data to fairness
 
-[`notebooks/01 Synthetic Data Demo.ipynb`](https://github.com/xinzhao13/mm-healthfusion/blob/main/notebooks/01%20Synthetic%20Data%20Demo.ipynb)
+[`notebooks/01 Synthetic Data Demo.ipynb`](https://github.com/nhsengland/mm-healthfusion/blob/main/notebooks/01%20Synthetic%20Data%20Demo.ipynb)
 runs the full workflow end to end, from the stored records to a trained, evaluated and explained
 model:
 
