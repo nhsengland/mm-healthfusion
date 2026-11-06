@@ -1,0 +1,52 @@
+seed: 42
+outcome: hospitalisation_ext_stay_7
+
+data:
+  task: hospitalisation
+  batch_size: 32
+  num_workers: 3
+  pin_memory: false
+  shuffle_train: true
+  split_dir: ../outputs/hospitalisation/3.1/hospitalisation_dualWindow_averageRecord_optionalHistory/hospitalisation_dualWindow_averageRecord_optionalHistory_normalised_ohe
+  modalities: [static, ts_prev, ts_curr, ecg_curr, cxr_prev, cxr_curr, notes_prev]
+
+model:
+  name: m3care
+  fusion_method: m3care
+  collate_style: m3care
+  modality_names: [static, ts_prev, ts_curr, ecg_curr, cxr_prev, cxr_curr, notes_prev]
+
+  d_model: 128
+  dropout: 0.1
+  output_dim: 1
+
+  MHD_num_head: 4
+  use_modality_mask: true
+  impute: true
+  missingness_embedding: false
+  graph_construction_loss_weight: 0.01
+  stability_loss_type: norm
+  mean_graph_construction_loss: true
+  gcn_refine_mode: adaptive
+  mask_missingness_fusion: true
+
+  enable_observed_contrastive: false
+  enable_missing_contrastive: false
+  learned_cross_modal_target: false
+  enable_learned_target_supervision: false
+  freeze_modality_encoders: false
+
+train:
+  epochs: 50
+  learning_rate: 5.0e-5
+  weight_decay: 1.0e-4
+  early_stopping: 10
+  modality_dropout:
+    enabled: false
+    ecg_prob: 0.1
+    cxr_prob: 0.5
+    notes_prob: 0.1
+
+evaluation:
+  modality_ablation:
+    enabled: false

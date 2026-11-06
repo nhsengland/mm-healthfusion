@@ -1,0 +1,37 @@
+seed: 42
+outcome: hospitalisation_ext_stay_7
+
+data:
+  task: hospitalisation
+  batch_size: 32
+  num_workers: 3
+  pin_memory: false
+  shuffle_train: true
+  split_dir: ../outputs/hospitalisation/3.1/hospitalisation_dualWindow_averageRecord_optionalHistory/hospitalisation_dualWindow_averageRecord_optionalHistory_normalised_ohe
+  modalities: [static, ts_prev, ts_curr, ecg_curr, cxr_prev, cxr_curr, notes_prev]
+
+model:
+  name: concat
+  fusion_method: concat
+  collate_style: concat
+  modality_names: [static, ts_prev, ts_curr, ecg_curr, cxr_prev, cxr_curr, notes_prev]
+
+  d_model: 128
+  dropout: 0
+  output_dim: 1
+
+train:
+  # Best 3.1_ohe concat sweep arm (lr 5e-5 / wd 1e-3), highest mean val MCC over seeds 42/43/44.
+  epochs: 50
+  learning_rate: 5.0e-5
+  weight_decay: 1.0e-3
+  early_stopping: 10
+  modality_dropout:
+    enabled: false
+    ecg_prob: 0
+    cxr_prob: 0
+    notes_prob: 0
+
+evaluation:
+  modality_ablation:
+    enabled: false

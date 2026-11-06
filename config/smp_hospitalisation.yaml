@@ -1,0 +1,57 @@
+seed: 42
+outcome: hospitalisation_ext_stay_7
+
+data:
+  task: hospitalisation
+  batch_size: 32
+  num_workers: 3
+  pin_memory: false
+  shuffle_train: true
+  split_dir: ../outputs/hospitalisation/3.1/hospitalisation_dualWindow_averageRecord_optionalHistory/hospitalisation_dualWindow_averageRecord_optionalHistory_normalised_ohe
+  modalities: [static, ts_prev, ts_curr, ecg_curr, cxr_prev, cxr_curr, notes_prev]
+
+model:
+  name: smp
+  fusion_method: smp
+  collate_style: fusemoe
+  modality_names: [static, ts_prev, ts_curr, ecg_curr, cxr_prev, cxr_curr, notes_prev]
+
+  d_model: 128
+  dropout: 0
+  output_dim: 1
+
+  gating: softmax  # softmax | laplace | gaussian
+  moe_hidden_size: 256
+  top_k: 2
+  disjoint_top_k: 1  # Experts each disjoint router picks, at most num_experts // number of modalities
+  use_modality_mask: true  # Zero missing modality inputs before routing
+
+  # The shared expert processes every row alongside the routed experts
+  use_shared_expert: true
+  shared_expert_weight: 0.333  # Probability mixture weight for log_prob
+
+  # Cosine scores use a learned scale and require softmax gating
+  router_score: cosine  # dot | cosine
+
+  # combination router not implemented for hospitalisation task
+  router_type: joint  # joint | permod | disjoint
+  num_experts: 7
+
+  loss_coef: 0.01  # Weight of the load-balancing loss
+
+train:
+  epochs: 50
+  learning_rate: 5.0e-5
+  weight_decay: 1.0e-3
+  early_stopping: 10
+
+  # Drop modalities only during training when enabled
+  modality_dropout:
+    enabled: false
+    ecg_prob: 0.1
+    cxr_prob: 0.1
+    notes_prob: 0.1
+
+evaluation:
+  modality_ablation:
+    enabled: false

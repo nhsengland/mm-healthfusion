@@ -1,0 +1,55 @@
+seed: 42
+outcome: deterioration_mechanical_ventilation
+
+data:
+  batch_size: 32
+  num_workers: 3
+  pin_memory: false
+  shuffle_train: true
+  split_dir: ../outputs/deterioration/3.1_ohe/deterioration_allStay_allRecord_allCohort/deterioration_allStay_allRecord_allCohort_normalised_ohe
+  modalities: [tabular, ecg, cxr, ts]
+model:
+  name: mtand_m3care
+  collate_style: m3care
+  d_model: 128
+  modality_names: [tabular, ecg, cxr, ts]
+  fusion_modality_names: [ecg, cxr, ts]
+  dropout: 0.1
+  output_dim: 1
+  MHD_num_head: 4
+  use_modality_mask: true
+  impute: true
+  missingness_embedding: false
+  graph_construction_loss_weight: 0.01
+  stability_loss_type: norm
+  gcn_refine_mode: adaptive
+  mask_missingness_fusion: true
+  # modalities_to_impute: [cxr]
+
+# Time series as a 4th modality (temporal form; needs mtand on below).
+ts_modality:
+  enabled: true
+  concat_mask: true            # upstream FuseMoE irregular-TS convention
+
+# Time-aware mTAND for ECG/CXR *and* the raw TS sequence.
+mtand:
+  enabled: true
+  pool: none                   # FuseMoE-faithful un-pooled (flattened) widths
+  tt_max: 16                   # = upstream tt_max (fusmose has 48 for 24hour window)
+  embed_time: 16               # upstream embed_time has 32 for ECG/CXR, 16 for TS (we unify to 32)
+  num_heads: 4                 # upstream num_heads has 4 for ECG/CXR, 2 for TS (we unify to 4)
+  time_scale: 90.0             # divides *_time so timestamps land in [0, 1]
+
+train:
+  epochs: 50
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  early_stopping: 10
+  modality_dropout:
+    enabled: false
+    ecg_prob: 0.1
+    cxr_prob: 0.5
+
+evaluation:
+  modality_ablation:
+    enabled: true

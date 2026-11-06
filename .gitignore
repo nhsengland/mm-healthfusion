@@ -1,0 +1,48 @@
+# Source data, run outputs and logs stay outside the repository
+/data/
+outputs/
+logs/
+lightning_logs/
+wandb/
+
+# Archived material and tests are kept locally only
+archive/
+test/
+tests/
+
+# Data files, model weights and results
+*.csv
+!config/event_items.csv
+*.parquet
+*.pkl
+*.pickle
+*.pt
+*.ckpt
+*.dcm
+*.xls*
+
+# Bash scripts are archived and kept out of the repository
+*.sh
+
+# Python and tooling caches
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+*.log
+
+# Local environments and secrets
+.venv/
+_env/
+.env
+
+# Documentation build output
+/site/
+
+# Editor and operating system files
+.vscode/
+.idea/
+*.code-workspace
+.DS_Store
+._*

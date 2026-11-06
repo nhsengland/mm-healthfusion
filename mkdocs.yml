@@ -1,0 +1,98 @@
+site_name: mm-healthfusion
+site_description: Exploration codebase for understanding explainability and fairness in multi-modal healthcare models
+site_url: https://xinzhao13.github.io/mm-healthfusion/
+repo_url: https://github.com/xinzhao13/mm-healthfusion
+repo_name: xinzhao13/mm-healthfusion
+edit_uri: edit/main/docs/
+copyright: >-
+  Code released under the MIT Licence. Documentation &copy; Crown copyright, available under the
+  <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open
+  Government Licence v3.0</a>.
+exclude_docs: |
+  /archive/
+
+# Report broken links and anchors as warnings so that --strict builds fail on them
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
+
+nav:
+    - Home: index.md
+    - User guide:
+        - Getting started: getting_started.md
+        - Cohort tables: create_tableone.md
+    - Examples:
+        - Deterioration: examples/deterioration.md
+        - Hospitalisation: examples/hospitalisation.md
+        - Evaluation and explainability: examples/analysis.md
+        - Synthetic data: examples/synthetic.md
+    - API reference: api_reference.md
+    - Developer guide: developer_guide.md
+    - Citations: citations.md
+
+theme:
+  logo: assets/NHS.svg
+  favicon: assets/NHS.svg
+  name: material
+  palette:
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - navigation.footer
+    - content.action.view
+    - content.action.edit
+    - content.code.copy
+  icon:
+    edit: material/pencil
+    view: material/eye
+
+extra_css:
+  - css/style.css
+  - css/mkdocstrings.css
+
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings
+
+markdown_extensions:
+  - admonition
+  - md_in_html
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+extra:
+  generator: false

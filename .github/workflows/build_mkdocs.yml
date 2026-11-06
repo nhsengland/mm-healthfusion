@@ -1,0 +1,49 @@
+name: Build MkDocs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: 0.13.7
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+          python-version: '3.11'
+      # The project is not a package (package = false), so only the docs group is installed
+      - name: Install docs dependencies
+        run: uv sync --frozen --only-group docs
+      # --strict fails the deployment on broken links, anchors or missing pages
+      - name: Build MkDocs
+        run: uv run --frozen --only-group docs mkdocs build --strict --clean --verbose
+      - name: Upload GitHub Pages artefact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

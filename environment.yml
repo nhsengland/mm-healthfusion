@@ -1,0 +1,12 @@
+# Conda shell for mm-healthfusion. Conda provides Python and uv only. The packages come from
+# uv.lock, installed into this env with:
+#   conda env create -f environment.yml
+#   conda activate mm-healthfusion
+#   UV_PROJECT_ENVIRONMENT=$CONDA_PREFIX uv sync --frozen --inexact
+name: mm-healthfusion
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - uv=0.13.7
+  - git

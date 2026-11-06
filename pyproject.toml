@@ -1,0 +1,116 @@
+[project]
+name = "mm-healthfusion"
+version = "1.0.0"
+description = "MM-HealthFusion: Building multi-modal patient representations for clinical prediction"
+authors = [
+    { name = "Zhiyan Bo", email = "zhiyan.bo@reuben.ox.ac.uk" },
+    { name = "Xin Zhao", email = "xinzhao13@gmail.com" },
+]
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+dependencies = [
+    # Must stay on numpy 2.x: the embedding pickles under /data/outputs reference `numpy._core`,
+    # which numpy 1.26.4 cannot import. numpy 2 still reads numpy-1-era pickles, so only this
+    # direction works. Needs spacy >=3.8 for a numpy-2-built thinc (see below).
+    "numpy>=2.2.6,<3",
+    "matplotlib>=3.10.9,<4",
+    "scikit-learn>=1.7.2,<2",
+    "seaborn>=0.13.2,<0.14",
+    "missingno>=0.5.2,<0.6",
+    "ipykernel>=6.31.0,<7",
+    "pre-commit>=3.8.0,<4",
+    "tqdm>=4.67.3,<5",
+    "toml>=0.10.2,<0.11",
+    "ruff>=0.3.5,<0.4",
+    "polars>=0.20.31,<0.21",
+    "wandb==0.27.0",
+    "shap>=0.47.1,<0.48",
+    "fairlearn>=0.12.0,<0.13",
+    "transformers>=4.57.6,<5",
+    # 3.8+ required: spacy 3.7.5 pins thinc 8.2.x, whose numpy_ops is built against the numpy 1 ABI.
+    "spacy==3.8.15",
+    # The en_core_sci_md model declares spacy <3.8.0, which `override-dependencies` below replaces
+    # with the spacy pin above. The version skew itself is cosmetic: spaCy logs W095 on load, and
+    # output is verified unchanged under 3.8.15. src/preprocessing/extract_notes.py must exclude
+    # (not disable) the statistical components, whose config stores booleans as strings that 3.8 rejects.
+    "en-core-sci-md @ https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.4/en_core_sci_md-0.5.4.tar.gz",
+    # CUDA 12.1 wheels from the explicit index in [tool.uv.sources]. Remove those sources for CPU support.
+    "torch>=2.5.1,<3",
+    "torchmetrics==1.4.0",
+    "torchvision>=0.20.1,<0.21",
+    "lightning==2.6.1",
+    "tableone>=0.9.1,<0.10",
+    "pyarrow>=19.0.1,<20",
+    "pandas>=2.2.3,<3",
+    "statannotations>=0.7.1,<0.8",
+    "confidenceinterval>=1.0.5,<2",
+    # Imported directly by src/, so declared rather than left to arrive transitively
+    "pyyaml>=6.0.1",
+    "scipy>=1.15.3",
+    "statsmodels>=0.14.6",
+    "huggingface-hub>=0.36.2",
+    # CXR embeddings (src/preprocessing/extract_cxr.py) and Grad-CAM (src/explanation/gradcam.py)
+    "torchxrayvision>=1.4.0",
+    "opencv-python>=4.13.0.92",
+    "scikit-image>=0.25.2",
+    # ECG embeddings (src/preprocessing/extract_ecg.py). Not on PyPI, pinned to a commit on master.
+    "fairseq-signals @ git+https://github.com/Jwoo5/fairseq-signals@f8f0ff1c788a82c2059cb452cd5462898867489e",
+]
+
+[dependency-groups]
+dev = [
+    "deptry>=0.16.1,<0.17",
+    "pytest==9.0.3",
+]
+docs = [
+    "mkdocs==1.6.0",
+    "mkdocs-material==9.5.27",
+    "pymdown-extensions==10.8.1",
+    "mkdocs-gen-files>=0.5.0,<0.6",
+    "mkdocs-autorefs==1.0.1",
+    "mkdocstrings[python]==0.25.1",
+]
+
+[tool.uv]
+# Not an installable package: `uv sync` installs the dependencies only.
+package = false
+# Install both groups by default, as `poetry install` did.
+default-groups = ["dev", "docs"]
+override-dependencies = ["spacy==3.8.15"]
+
+# Remove these sources for CPU-only support for PyTorch
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
+
+[tool.uv.sources]
+# 64-bit Windows reports platform_machine as AMD64, Linux as x86_64
+torch = [
+    { index = "pytorch-cu121", marker = "(sys_platform == 'linux' and platform_machine == 'x86_64') or (sys_platform == 'win32' and platform_machine == 'AMD64')" },
+]
+torchvision = [
+    { index = "pytorch-cu121", marker = "(sys_platform == 'linux' and platform_machine == 'x86_64') or (sys_platform == 'win32' and platform_machine == 'AMD64')" },
+]
+
+[tool.pytest.ini_options]
+markers = [
+    # Tests needing a trained checkpoint / data bundle on disk. They skip themselves when
+    # those are absent, so the suite stays hermetic; deselect with -m "not slow".
+    "slow: requires a real checkpoint or data bundle",
+]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+extend-select = [
+    "I",  # isort
+    "UP", # pyupgrade
+    "PL", # pylint
+    "B"]
+
+ignore = [
+    "E501", # too many lines
+    "PLR0913", # too many arguments in function
+    ]

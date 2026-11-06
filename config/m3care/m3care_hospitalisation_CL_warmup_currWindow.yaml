@@ -1,0 +1,82 @@
+seed: 42
+outcome: hospitalisation_ext_stay_7
+
+data:
+  task: hospitalisation
+  batch_size: 32
+  num_workers: 3
+  pin_memory: false
+  shuffle_train: true
+  split_dir: ../outputs/hospitalisation/3.1/hospitalisation_currWindow_averageRecord_optionalHistory/hospitalisation_currWindow_averageRecord_optionalHistory_normalised_ohe
+  modalities: [static, ts_curr, ecg_curr, cxr_curr]
+  use_complete_set: true
+  complete_set_modalities:
+    - static
+    - ts_curr
+    - ecg_curr
+    - cxr_curr
+
+model:
+  name: m3care
+  fusion_method: m3care
+  collate_style: m3care
+  modality_names: [static, ts_curr, ecg_curr, cxr_curr]
+
+  d_model: 128
+  dropout: 0.1
+  output_dim: 1
+
+  MHD_num_head: 4
+  use_modality_mask: true
+  impute: true
+  missingness_embedding: false
+  graph_construction_loss_weight: 0.01
+  stability_loss_type: norm
+  mean_graph_construction_loss: true
+  gcn_refine_mode: imputed_for_missingness
+  mask_missingness_fusion: true
+
+  # Contrastive learning related hyperparameters
+  contrastive_modalities:
+    - static
+    - ts_curr
+    - ecg_curr
+    - cxr_curr
+  enable_observed_contrastive: true
+  enable_missing_contrastive: false
+  observed_contrastive_weight: 0.5
+  # missing_contrastive_weight: 1.0
+  contrastive_temperature: 0.1
+  contrastive_projection_dim: 128
+  cross_modal_target_modalities:
+    - static
+    - ts_curr
+    - ecg_curr
+    - cxr_curr
+  min_contrastive_samples: 2
+
+  learned_cross_modal_target: true
+  enable_learned_target_supervision: true
+  learned_target_loss_type: cosine
+  learned_target_loss_weight: 1.0
+  learned_target_contrastive_weight: 0.1
+
+  # Model finetuning related hyperparameters
+  freeze_modality_encoders: false
+  # load_from: /path/to/pretrained/checkpoint_best.ckpt
+  # load_strict: true
+
+train:
+  epochs: 50
+  learning_rate: 5.0e-05
+  weight_decay: 0.001
+  early_stopping: 10
+  modality_dropout:
+    enabled: false
+    ecg_prob: 0.1
+    cxr_prob: 0.5
+    notes_prob: 0.1
+
+evaluation:
+  modality_ablation:
+    enabled: true

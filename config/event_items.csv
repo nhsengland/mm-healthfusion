@@ -1,0 +1,57 @@
+itemid,slug,label,fluid,category,valueuom,lower,upper,threshold_source,threshold_rationale
+52069.0,absolute_basophil_count,Absolute Basophil Count,Blood,Hematology,K/uL,,20.0,MDS-ED (verbatim),Adopted from MDS-ED full_preprocessing.py
+52073.0,absolute_eosinophil_count,Absolute Eosinophil Count,Blood,Hematology,K/uL,,20.0,MDS-ED (verbatim),Adopted from MDS-ED full_preprocessing.py
+51133.0,absolute_lymphocyte_count,Absolute Lymphocyte Count,Blood,Hematology,K/uL,,100.0,MDS-ED (verbatim),Adopted from MDS-ED full_preprocessing.py
+52074.0,absolute_monocyte_count,Absolute Monocyte Count,Blood,Hematology,K/uL,,100.0,proposed,Absolute monocyte count K/uL; matches MDS-ED's lymphocyte ceiling
+52075.0,absolute_neutrophil_count,Absolute Neutrophil Count,Blood,Hematology,K/uL,,500.0,proposed,Absolute neutrophil count K/uL; allows extreme leukaemoid reaction
+50861.0,alanine_aminotransferase_(alt),Alanine Aminotransferase (ALT),Blood,Chemistry,IU/L,,2000.0,MDS-ED (verbatim),Adopted from MDS-ED full_preprocessing.py
+50862.0,albumin,Albumin,Blood,Chemistry,g/dL,,10.0,proposed,Albumin g/dL; >10 exceeds total protein
+50863.0,alkaline_phosphatase,Alkaline Phosphatase,Blood,Chemistry,IU/L,,2000.0,MDS-ED (verbatim),Adopted from MDS-ED full_preprocessing.py
+50868.0,anion_gap,Anion Gap,Blood,Chemistry,mEq/L,-20.0,100.0,proposed,"Anion gap mEq/L; can be negative, observed min -4"
+50878.0,asparate_aminotransferase_(ast),Asparate Aminotransferase (AST),Blood,Chemistry,IU/L,,2000.0,MDS-ED (verbatim),Adopted from MDS-ED full_preprocessing.py
+50802.0,base_excess,Base Excess,Blood,Blood Gas,mEq/L,-50.0,50.0,proposed,"Base excess mEq/L; symmetric, observed range -41 to 30"
+51146.0,basophils,Basophils,Blood,Hematology,%,,100.0,proposed,Percentage of white cells; cannot exceed 100
+50882.0,bicarbonate,Bicarbonate,Blood,Chemistry,mEq/L,,60.0,proposed,Bicarbonate mEq/L; >60 beyond severe metabolic alkalosis
+50885.0,bilirubin_total,"Bilirubin, Total",Blood,Chemistry,mg/dL,,80.0,proposed,Total bilirubin mg/dL; >80 beyond extreme hyperbilirubinaemia
+50893.0,calcium_total,"Calcium, Total",Blood,Chemistry,mg/dL,,20.0,proposed,Total calcium mg/dL; observed max 46.4 vs p99.9 12.2 is an error
+50804.0,calculated_total_co2,Calculated Total CO2,Blood,Blood Gas,mEq/L,,80.0,proposed,Calculated total CO2 mEq/L; mirrors bicarbonate
+50902.0,chloride,Chloride,Blood,Chemistry,mEq/L,50.0,200.0,proposed,Chloride mEq/L; mirrors sodium range
+50912.0,creatinine,Creatinine,Blood,Chemistry,mg/dL,,50.0,proposed,Creatinine mg/dL; >50 beyond end-stage renal failure
+51200.0,eosinophils,Eosinophils,Blood,Hematology,%,,100.0,proposed,Percentage of white cells; cannot exceed 100
+50931.0,glucose,Glucose,Blood,Chemistry,mg/dL,,2000.0,MDS-ED (verbatim),Adopted from MDS-ED full_preprocessing.py
+51221.0,hematocrit,Hematocrit,Blood,Hematology,%,,75.0,proposed,Haematocrit is a percentage; >75% is beyond polycythaemia and instrument range
+51222.0,hemoglobin,Hemoglobin,Blood,Hematology,g/dL,,25.0,proposed,Haemoglobin g/dL; >25 exceeds severe polycythaemia
+52135.0,immature_granulocytes,Immature Granulocytes,Blood,Hematology,%,,100.0,proposed,Percentage of white cells; cannot exceed 100
+50813.0,lactate,Lactate,Blood,Blood Gas,mmol/L,,2000.0,MDS-ED (verbatim),Adopted from MDS-ED full_preprocessing.py
+50954.0,lactate_dehydrogenase_(ld),Lactate Dehydrogenase (LD),Blood,Chemistry,IU/L,,20000.0,proposed,LDH IU/L; huge in haemolysis and tumour lysis (observed max 16670)
+51244.0,lymphocytes,Lymphocytes,Blood,Hematology,%,,100.0,proposed,Percentage of white cells; cannot exceed 100
+50960.0,magnesium,Magnesium,Blood,Chemistry,mg/dL,,10.0,proposed,Magnesium mg/dL; observed max 27 vs p99.9 3.7 is an error
+51248.0,mch,MCH,Blood,Hematology,pg,,60.0,proposed,MCH pg; observed max 273.8 vs p99.9 40.5 is a decimal shift
+51249.0,mchc,MCHC,Blood,Hematology,g/dL,,45.0,proposed,"MCHC; >45 is physically impossible (Hb cannot exceed cell volume). Source records this itemid under both ""%"" and ""g/dL""; harmonised to g/dL at factor 1.0 (same quantity, verified against the Hb/Hct identity), so this feature carries one unit."
+51250.0,mcv,MCV,Blood,Hematology,fL,,150.0,proposed,MCV fL; >150 exceeds extreme macrocytosis
+51254.0,monocytes,Monocytes,Blood,Hematology,%,,100.0,proposed,Percentage of white cells; cannot exceed 100
+51256.0,neutrophils,Neutrophils,Blood,Hematology,%,,100.0,proposed,Percentage of white cells; cannot exceed 100
+50818.0,pco2,pCO2,Blood,Blood Gas,mm Hg,,200.0,proposed,pCO2 mm Hg; >200 beyond extreme hypercapnia
+50820.0,ph_blood,pH,Blood,Blood Gas,units,6.0,8.0,proposed,Arterial pH; outside 6.0-8.0 is incompatible with life
+51491.0,ph_urine,pH,Urine,Hematology,units,4.0,9.5,proposed,Urine dipstick pH reads 5.0-9.0; allow the reported range
+50970.0,phosphate,Phosphate,Blood,Chemistry,mg/dL,,30.0,proposed,Phosphate mg/dL; >30 beyond extreme hyperphosphataemia
+51265.0,platelet_count,Platelet Count,Blood,Hematology,K/uL,,2000.0,MDS-ED (verbatim),Adopted from MDS-ED full_preprocessing.py
+50821.0,po2,pO2,Blood,Blood Gas,mm Hg,,800.0,proposed,pO2 mm Hg; ceiling on 100% oxygen (observed max 610)
+50971.0,potassium,Potassium,Blood,Chemistry,mEq/L,,12.0,proposed,"Potassium mEq/L; >12 incompatible with life, observed max 10"
+51274.0,pt,PT,Blood,Hematology,sec,,200.0,proposed,PT sec; assay is truncated at 150 (observed max 150)
+51275.0,ptt,PTT,Blood,Hematology,sec,,200.0,proposed,PTT sec; assay is truncated at 150 (observed max 150)
+51493.0,rbc,RBC,Urine,Hematology,#/hpf,,1000.0,proposed,Urine RBC #/hpf; high but bounded (observed max 182)
+51277.0,rdw,RDW,Blood,Hematology,%,,40.0,proposed,RDW %; >40 beyond instrument range
+52172.0,rdw-sd,RDW-SD,Blood,Hematology,fL,,150.0,proposed,RDW-SD fL; observed max 5802 vs p99.9 103 is a decimal shift
+51279.0,red_blood_cells,Red Blood Cells,Blood,Hematology,m/uL,,10.0,proposed,RBC m/uL; >10 exceeds extreme polycythaemia
+50983.0,sodium,Sodium,Blood,Chemistry,mEq/L,50.0,200.0,proposed,Sodium mEq/L; survivable range is far inside 50-200
+51498.0,specific_gravity,Specific Gravity,Urine,Hematology, ,1.0,1.06,proposed,Urine specific gravity dipstick reads 1.000-1.050
+51006.0,urea_nitrogen,Urea Nitrogen,Blood,Chemistry,mg/dL,,300.0,proposed,Urea nitrogen mg/dL; >300 beyond extreme uraemia
+51516.0,wbc,WBC,Urine,Hematology,#/hpf,,1000.0,proposed,Urine WBC #/hpf; high but bounded (observed max 626)
+51301.0,white_blood_cells,White Blood Cells,Blood,Hematology,K/uL,,1000.0,proposed,WBC K/uL; allows extreme leukaemia (observed max 617)
+,temperature,temperature,Vital Sign,Vital Sign,degF,50.0,150.0,MDS-ED (verbatim),53 min / 115.7 max recorded; floor also catches Celsius values in a Fahrenheit column
+,heartrate,heartrate,Vital Sign,Vital Sign,bpm,,700.0,MDS-ED (verbatim),600 max recorded
+,resprate,resprate,Vital Sign,Vital Sign,insp/min,,300.0,MDS-ED (verbatim),"normal 20, athletes 50"
+,o2sat,o2sat,Vital Sign,Vital Sign,%,0.0,100.0,MDS-ED (verbatim),cannot be negative nor more than 100
+,sbp,sbp,Vital Sign,Vital Sign,mm Hg,,500.0,MDS-ED (verbatim),max recorded 360
+,dbp,dbp,Vital Sign,Vital Sign,mm Hg,,500.0,MDS-ED (verbatim),max recorded 370

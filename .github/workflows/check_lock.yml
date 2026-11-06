@@ -1,0 +1,26 @@
+name: Check lockfile
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check-lock:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: 0.13.7
+      # Fails when pyproject.toml changed without re-running `uv lock`
+      - name: Check uv.lock is up to date
+        run: uv lock --check
+      # Fails when requirements.txt was not regenerated from uv.lock. Same args as the uv-export hook
+      - name: Check requirements.txt matches uv.lock
+        run: |
+          uv export --frozen --no-hashes --all-groups --emit-index-url --output-file=requirements.txt --quiet
+          git diff --exit-code requirements.txt

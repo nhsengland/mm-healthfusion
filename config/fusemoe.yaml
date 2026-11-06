@@ -1,0 +1,72 @@
+seed: 42
+outcome: deterioration_mechanical_ventilation
+
+data:
+  batch_size: 32
+  num_workers: 3
+  pin_memory: false
+  shuffle_train: true
+  split_dir: ../outputs/deterioration/3.1_ohe/deterioration_allStay_allRecord_allCohort/deterioration_allStay_allRecord_allCohort_normalised_ohe
+  modalities: [tabular, ecg, cxr, ts]
+
+model:
+  name: fusemoe
+  fusion_method: fusemoe
+  collate_style: fusemoe
+  modality_names: [tabular, ecg, cxr]
+
+  # Experts route sequence inputs inside each encoder layer
+  num_layers: 1  # Number of encoder layers
+  num_heads: 8  # Attention heads per encoder layer
+  embed_dropout: 0.1  # Dropout after scaling and adding positions
+
+  d_model: 128
+  dropout: 0
+  output_dim: 1
+
+  gating: softmax  # softmax | laplace | gaussian
+  moe_hidden_size: 256
+  top_k: 2
+  disjoint_top_k: 1  # Experts each disjoint router picks, at most num_experts // number of sequence modalities
+  use_modality_mask: true  # Zero missing modality inputs before routing
+
+  # Disjoint routing requires num_experts to divide evenly across sequence modalities
+  router_type: joint  # joint | permod | disjoint
+  num_experts: 7
+
+  loss_coef: 0.1  # Weight of the load-balancing loss
+
+  # Cosine scores use a learned scale and require softmax gating
+  router_score: cosine  # dot | cosine
+
+  # The shared expert processes every row alongside the routed experts
+  use_shared_expert: true
+  shared_expert_weight: 0.333  # Probability mixture weight for log_prob
+
+# Encode raw time series as the fourth modality with mTAND
+ts_modality:
+  enabled: true
+  concat_mask: true  # Append observation indicators to time-series values
+
+mtand:
+  enabled: true
+  tt_max: 8  # Number of reference time points
+  embed_time: 16  # Time embedding width
+  num_heads: 4  # Attention heads in each mTAND encoder
+  time_scale: 90.0  # Divide observation times by this value
+
+train:
+  epochs: 50
+  learning_rate: 5.0e-05
+  weight_decay: 1.0e-3
+  early_stopping: 10
+
+  # Drop modalities only during training when enabled
+  modality_dropout:
+    enabled: true
+    ecg_prob: 0.1
+    cxr_prob: 0.1
+
+evaluation:
+  modality_ablation:
+    enabled: true

@@ -1,0 +1,83 @@
+# Two-stage curriculum training for the static smp model in config/smp.yaml
+# Stage 1 warms up on rows with every modality, then stage 2 fine-tunes on all rows
+# This file ships the stage 1 settings and stage 2 changes two keys on the command line
+# Train from the repository root:
+#   Stage 1: python -m src.train --config config/smp_cl.yaml --run-id <warmup_run_id>
+#   Stage 2: python -m src.train --config config/smp_cl.yaml --run-id <finetune_run_id> \
+#              --set data.use_complete_set=false \
+#              --set model.load_from=<warmup_run_dir>/checkpoint_best.ckpt
+
+seed: 42
+outcome: deterioration_mechanical_ventilation
+
+data:
+  batch_size: 32
+  num_workers: 3
+  pin_memory: false
+  shuffle_train: true
+  split_dir: ../outputs/deterioration/3.1_ohe/deterioration_allStay_averageRecord_allCohort/deterioration_allStay_averageRecord_allCohort_normalised_ohe
+  modalities: [tabular, ecg, cxr]
+
+  # Keep only rows with the listed modalities in every data split
+  # Stage 1 uses true and stage 2 uses false
+  use_complete_set: true
+  complete_set_modalities: [tabular, ecg, cxr]
+
+model:
+  name: smp
+  fusion_method: smp
+  collate_style: fusemoe
+  modality_names: [tabular, ecg, cxr]
+
+  d_model: 128
+  dropout: 0
+  output_dim: 1
+
+  # Stage 2 starts from the best stage 1 weights with a fresh optimiser
+  # load_from: /path/to/warmup/checkpoint_best.ckpt
+  # Require all model weights to match when loading a checkpoint
+  load_strict: true
+
+  gating: softmax  # softmax | laplace | gaussian
+  moe_hidden_size: 256
+  top_k: 2
+  disjoint_top_k: 1  # Experts each disjoint router picks, at most num_experts // number of modalities
+  use_modality_mask: true  # Zero missing modality inputs before routing
+
+  # The shared expert processes every row alongside the routed experts
+  use_shared_expert: true
+  shared_expert_weight: 0.333  # Probability mixture weight for log_prob
+
+  # Cosine scores use a learned scale and require softmax gating
+  router_score: cosine  # dot | cosine
+
+  router_type: joint  # joint | permod | disjoint | combination
+  num_experts: 7
+
+  loss_coef: 0.1  # Weight of the load-balancing loss, used in both stages
+
+  # These settings apply only to combination routing
+  # Combination experts follow largest groups first, then any extra experts
+  combination_router_supervision: true  # Favour the expert for the available modalities
+  combination_router_loss_weight: 0.1  # Weight of the combination supervision loss
+  combination_supervise_full_modality: true  # Include rows with all modalities
+
+  # When enabled, balance complete and incomplete rows separately
+  # Incomplete rows exclude expert 0, which represents all modalities
+  combination_balance_exclusion: false
+
+train:
+  epochs: 50
+  learning_rate: 5.0e-5
+  weight_decay: 1.0e-3
+  early_stopping: 10
+
+  # Drop modalities only during training, enabled in both stages
+  modality_dropout:
+    enabled: true
+    ecg_prob: 0.1
+    cxr_prob: 0.1
+
+evaluation:
+  modality_ablation:
+    enabled: true

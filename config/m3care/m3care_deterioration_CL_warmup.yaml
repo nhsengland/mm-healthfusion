@@ -1,0 +1,68 @@
+seed: 42
+outcome: deterioration_mechanical_ventilation
+
+data:
+  task: deterioration
+  batch_size: 32
+  num_workers: 3
+  pin_memory: false
+  shuffle_train: true
+  split_dir: ../outputs/deterioration/3.1_ohe/deterioration_allStay_averageRecord_allCohort/deterioration_allStay_averageRecord_allCohort_normalised_ohe
+  modalities: [tabular, ecg, cxr]
+  use_complete_set: true
+  complete_set_modalities: [tabular, ecg, cxr]
+
+model:
+  name: m3care
+  fusion_method: m3care
+  collate_style: m3care
+  d_model: 128
+  modality_names: [tabular, ecg, cxr]
+  dropout: 0.1
+  output_dim: 1
+  MHD_num_head: 4
+  use_modality_mask: true
+  impute: true
+  missingness_embedding: false
+  graph_construction_loss_weight: 0.01
+  stability_loss_type: similarity
+  mean_graph_construction_loss: false
+  gcn_refine_mode: imputed_for_missingness
+  mask_missingness_fusion: true
+  modalities_to_impute: [tabular, ecg, cxr]
+
+  # Contrastive learning related hyperparameters
+  contrastive_modalities: [tabular, ecg, cxr]
+  enable_observed_contrastive: true
+  enable_missing_contrastive: false
+  observed_contrastive_weight: 0.5
+  # missing_contrastive_weight: 1.0
+  contrastive_temperature: 0.1
+  contrastive_projection_dim: 128
+  cross_modal_target_modalities: [tabular, ecg, cxr]
+  min_contrastive_samples: 2
+
+  learned_cross_modal_target: true
+  enable_learned_target_supervision: true
+  learned_target_loss_type: cosine
+  learned_target_loss_weight: 1.0
+  learned_target_contrastive_weight: 0.1
+
+  # Model finetuning related hyperparameters
+  freeze_modality_encoders: false
+  # load_from: /path/to/pretrained/checkpoint_best.ckpt
+  # load_strict: true
+
+train:
+  epochs: 50
+  learning_rate: 5.0e-05
+  weight_decay: 0.0001
+  early_stopping: 10
+  modality_dropout:
+    enabled: false
+    ecg_prob: 0.1
+    cxr_prob: 0.5
+
+evaluation:
+  modality_ablation:
+    enabled: true
