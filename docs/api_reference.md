@@ -506,7 +506,7 @@ do not establish multi-task training support.
 | `--wandb-init-timeout` | Set the W&B initialisation timeout. |
 
 The model factory supports `concat`, `m3care`, `smp`, `fusemoe` and `mtand_m3care`.
-Use `smp` to select the static MoE model.
+Use `smp` to select the static FuseMoE model.
 Compatibility depends on task and configuration. The supplied hospitalisation configurations
 cover `concat`, `m3care` and `smp`. The supplied temporal deterioration configurations require
 an all-record split.
@@ -587,11 +587,11 @@ For complete-case warm-up, `data.use_complete_set` and `data.complete_set_modali
 samples in the deterioration and hospitalisation loaders. See the
 [Developer guide](developer_guide.md#m3care-and-contrastive-learning) for the two-stage workflow.
 
-### Static MoE model configuration
+### Static FuseMoE model configuration
 
 Start from `config/smp.yaml` for deterioration or `config/smp_hospitalisation.yaml`
 for hospitalisation. Set `model.name: smp` and `model.collate_style: fusemoe`.
-The static sparse MoE model routes static modality representations through experts.
+The static FuseMoE model routes static modality representations through experts.
 The following keys belong under `model`.
 
 | Key | Purpose and default |
@@ -633,9 +633,9 @@ Start from `config/fusemoe.yaml` and use an all-record deterioration split. Set
 sequence encoder.
 
 The routing, expert and shared-expert settings in the
-[static MoE table](#static-moe-model-configuration) also apply, with `num_experts` defaulting to
+[static FuseMoE table](#static-fusemoe-model-configuration) also apply, with `num_experts` defaulting to
 `7`. Supported routers are `joint`, `permod` and `disjoint`. The combination routing settings apply
-only to the static MoE model.
+only to the static FuseMoE model.
 
 | Key under `model` | Purpose and default |
 |---|---|
@@ -889,7 +889,7 @@ and `shap_manifest.json`. The files depend on `--exp-mode`.
 
 [![SHAP heatmap of the top tabular features across synthetic deterioration test patients](assets/results_explain_heatmap.png)](assets/results_explain_heatmap.png)
 
-<figcaption style="color: #263238;">Example <code>--summary-plot heatmap</code> output for the static MoE model trained on synthetic deterioration data. Each column is a test patient and each row a feature, coloured by SHAP value. The f(x) line above shows each patient's predicted probability. Patients with similar explanations are grouped together.</figcaption>
+<figcaption style="color: #263238;">Example <code>--summary-plot heatmap</code> output for a static FuseMoE model trained on synthetic deterioration data. Each column is a test patient and each row a feature, coloured by SHAP value. The f(x) line above shows each patient's predicted probability. Patients with similar explanations are grouped together.</figcaption>
 </figure>
 
 <figure markdown="1" style="max-width: 420px; margin: 1rem auto; padding: 0.5rem; background: #fff; color: #263238;">

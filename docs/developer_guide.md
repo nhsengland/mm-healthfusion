@@ -57,12 +57,12 @@ loss. Dataset-level multi-task masks do not imply multi-task training support.
 |---|---|---|
 | `concat` | Concatenate encoded modalities for prediction. | Deterioration and hospitalisation |
 | `m3care` | Use patient-similarity graphs for optional missing-modality imputation, then fuse representations. | Deterioration and hospitalisation |
-| Static MoE model (`smp`) | Route static representations through a static sparse MoE. | Deterioration and hospitalisation |
-| `fusemoe` | Route temporal representations through experts inside a transformer encoder. | Deterioration |
+| Static FuseMoE `smp` | Route static representations through a static sparse MoE. | Deterioration and hospitalisation |
+| Temporal FuseMoE `fusemoe` | Route temporal representations through experts inside a transformer encoder. | Deterioration |
 | `mtand_m3care` | Combine mTAND temporal encoding with M3Care. | Deterioration |
 
 The model factory supports these five names. Factory availability alone does not establish
-compatibility with every task. The supplied FuseMoE and mTAND-M3Care examples use raw time series
+compatibility with every task. The supplied temporal FuseMoE and mTAND-M3Care examples use raw time series
 from an `all`-record deterioration bundle. The supplied hospitalisation models use their named
 window-specific blocks. See [Getting started](getting_started.md#multi-modal-learning) for
 configurations.
@@ -120,23 +120,23 @@ frozen. See the
 [M3Care settings](api_reference.md#m3care-configuration) and
 [M3Care run outputs](api_reference.md#run-logs-and-checkpoints).
 
-### Static MoE model
+### Static FuseMoE model
 
 The static sparse MoE model routes static modality representations through experts.
 A top-k router selects experts for each sample. An optional shared expert processes every sample,
 and its prediction is mixed with the routed experts' predictions. Unavailable modalities are zeroed
 before routing. The load-balancing loss is the model's auxiliary loss. Combination routing assigns
 experts to modality combinations and is available only for this model. See the
-[static MoE settings](api_reference.md#static-moe-model-configuration).
+[static FuseMoE settings](api_reference.md#static-fusemoe-model-configuration).
 
 <figure markdown="1" style="max-width: 600px; margin: 1rem auto; padding: 0.5rem; background: #fff; color: #263238;">
 
-[![Example static MoE model with tabular, ECG and CXR encoders, an availability mask, a top-k router and a shared expert](assets/methods_fusemoe.png)](assets/methods_fusemoe.png)
+[![Example static FuseMoE model with tabular, ECG and CXR encoders, an availability mask, a top-k router and a shared expert](assets/methods_fusemoe.png)](assets/methods_fusemoe.png)
 
 <figcaption style="color: #263238;">Example static MoE configuration with three modalities and a shared expert.</figcaption>
 </figure>
 
-### FuseMoE
+### Temporal FuseMoE
 
 FuseMoE models ECG, CXR, and raw time series as sequences. **mTAND** places each
 sequence on a shared grid of `mtand.tt_max` reference times, so `mtand.enabled` must be true and its
@@ -214,7 +214,7 @@ the evaluation tools are shared across models. A new fusion model is added as a 
    respected.
 5. **Choose a batch format.** Set `model.collate_style` to an existing style in `COLLATE_FNS`
    (`src/data/collate.py`). The supplied configurations use `concat` for the concatenation model,
-   `fusemoe` for the static MoE model and FuseMoE, and `m3care` for M3Care and mTAND-M3Care. The
+   `fusemoe` for the static and temporal FuseMoE, and `m3care` for M3Care and mTAND-M3Care. The
    three styles currently build the same batch, with padded features, times, lengths and
    missingness for every modality. The separate names are reserved for model-specific fields,
    and none have been added yet. Add a collator only if the model needs fields that this batch does
