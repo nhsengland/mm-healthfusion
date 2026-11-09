@@ -22,7 +22,6 @@ nav:
     - Home: index.md
     - User guide:
         - Getting started: getting_started.md
-        - Cohort tables: create_tableone.md
     - Examples:
         - Deterioration: examples/deterioration.md
         - Hospitalisation: examples/hospitalisation.md
