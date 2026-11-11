@@ -239,6 +239,7 @@ Xin Zhao · [@xinzhao13](https://github.com/xinzhao13) · 380 commits on `main` 
   experimentation.
 - Evaluation and explainability: Developed model evaluation, fairness assessment and
   explainability methods.
+- Synthetic data and demo: Prepared the synthetic data generator and the end-to-end synthetic data demo.
 - Code and documentation: Integrated, tested and refactored code, and contributed documentation.
 
 Zhiyan Bo · [@ZhiyanBo](https://github.com/ZhiyanBo) · 87 commits on `main` (excluding merges)

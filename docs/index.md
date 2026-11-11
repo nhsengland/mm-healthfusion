@@ -58,9 +58,8 @@ Follow the [deterioration](examples/deterioration.md) and
 [analysis example](examples/analysis.md) for evaluation and explainability. The
 [synthetic data example](examples/synthetic.md) works without MIMIC access. Its demo notebook runs
 the full workflow, from the data formats to training, evaluation, explanation and fairness
-evaluation of the static MoE model, and the example gives the commands for every static fusion
-model. See
-[Cohort tables](create_tableone.md) to summarise baseline characteristics. The
+evaluation of the static FuseMoE model, and the example gives the commands for every static fusion
+model. The
 [API reference](api_reference.md) covers commands and configuration, the
 [developer guide](developer_guide.md) explains the pipeline and how to extend it, and
 [citations](citations.md) lists the datasets and methods used in the project.

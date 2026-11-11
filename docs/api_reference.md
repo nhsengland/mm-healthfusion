@@ -288,7 +288,7 @@ date-only, so a `dod`-based test misses every patient admitted and dying on the 
 and those rows then score 0 on all three labels — which would make the worst outcome in the cohort
 invisible.
 
-#### Outputs
+#### Key outputs
 
 | File under `../outputs/hospitalisation/3.1/extract/<history>History/` | Contents |
 |---|---|
@@ -486,6 +486,72 @@ through `--static`, `synthetic_split_summary.json`, which gives
 counts, outcome prevalence, feature widths and names, modality availability, missingness rates,
 the synthetic signal and the planted demographic biases with per-group statistics.
 
+## Data exploration
+
+### Cohort tables
+
+`src.exploration.create_tableone` writes baseline characteristics tables ("Table 1") for the
+deterioration and hospitalisation cohorts using the
+[`tableone`](https://github.com/tompollard/tableone) package. Each table contains an `All` column
+and one column per outcome-positive group. The groups overlap, so no hypothesis test is run
+across them.
+
+```sh
+python -m src.exploration.create_tableone
+python -m src.exploration.create_tableone --task hospitalisation --output-dir /data/outputs/tableone
+```
+
+| Argument | Purpose and default |
+|---|---|
+| `--task` | `deterioration`, `hospitalisation` or `both`. Default `both`. |
+| `--deterioration-bundle` | Deterioration bundle directory. Default `/data/outputs/deterioration/3.1_complete/deterioration_allStay_averageRecord_allCohort`. |
+| `--hospitalisation-bundle` | Hospitalisation bundle directory. Default `/data/outputs/hospitalisation/3.1/hospitalisation_dualWindow_averageRecord_optionalHistory`. |
+| `--output-dir` | Output folder. Default `/data/outputs/tableone`. |
+
+The dual-window hospitalisation bundle is the default because its key table carries availability
+flags for both the current and the previous window.
+
+#### Inputs and cohort membership
+
+The script summarises raw values from the bundle's `_tabular.csv` and `_keys.csv`, using the
+split parquet files in `{bundle_name}_normalised_ohe` only to select identifiers. This avoids
+summarising imputed, scaled or one-hot encoded values while retaining only rows that reach a
+training, validation or test split.
+
+The deterioration splitter normally keeps only the earliest stay of each validation and test
+patient, so later stays can remain in the bundle without reaching a split. The summary JSON
+records how many bundle rows were excluded. Deterioration counts ED stays, allowing several
+rows per patient; hospitalisation counts patients.
+
+#### Summary statistics
+
+| Kind | Summary | Variables |
+|---|---|---|
+| Continuous | median [Q1,Q3] | age, BMI, current window length |
+| Categorical | n (%) per level | ethnicity, marital status, insurance, triage acuity |
+| Flag | n (%) of the `Yes` level | women, BMI recorded, modality availability, comorbidity, previous admission |
+
+Counts use thousands separators and percentages include a percent sign, as in `62,188 (53.4%)`.
+Marital status, insurance, comorbidity, previous admission and the two observation windows exist
+only in the hospitalisation bundle.
+
+Triage acuity uses the original Emergency Severity Index (ESI) labels, with levels 4 and 5
+combined as `4 or 5` and missing values shown as `Missing`. Hospitalisation merges these levels
+at extraction; deterioration merges them for display. Gender is stored as 1 for male and 0 for
+female. Deterioration ethnicity is rebuilt from its indicator columns, and `No charge` insurance
+is merged into `Other`. Unexpected categories raise an error.
+
+#### Key outputs
+
+| File under the output folder | Contents |
+|---|---|
+| `cohort_table_{task}.csv` | Summary table with `Variable` and `Level` columns |
+| `cohort_table_{task}.tex` | The same values as a nested LaTeX `tabular`, requiring `booktabs` |
+
+The LaTeX table uses bold variable headings, indented categorical levels and only the `Yes`
+count for flags. Related flags share a heading, such as `Modality availability, n (%)`.
+Group sizes appear beneath the column headings rather than in an `n` row.
+
 ## Model training
 
 `python -m src.train` trains one binary outcome per run. Use `model.output_dim: 1` and set the
@@ -506,7 +572,7 @@ do not establish multi-task training support.
 | `--wandb-init-timeout` | Set the W&B initialisation timeout. |
 
 The model factory supports `concat`, `m3care`, `smp`, `fusemoe` and `mtand_m3care`.
-Use `smp` to select the static MoE model.
+Use `smp` to select the static FuseMoE model.
 Compatibility depends on task and configuration. The supplied hospitalisation configurations
 cover `concat`, `m3care` and `smp`. The supplied temporal deterioration configurations require
 an all-record split.
@@ -587,11 +653,11 @@ For complete-case warm-up, `data.use_complete_set` and `data.complete_set_modali
 samples in the deterioration and hospitalisation loaders. See the
 [Developer guide](developer_guide.md#m3care-and-contrastive-learning) for the two-stage workflow.
 
-### Static MoE model configuration
+### Static FuseMoE model configuration
 
 Start from `config/smp.yaml` for deterioration or `config/smp_hospitalisation.yaml`
 for hospitalisation. Set `model.name: smp` and `model.collate_style: fusemoe`.
-The static sparse MoE model routes static modality representations through experts.
+The static FuseMoE model routes static modality representations through experts.
 The following keys belong under `model`.
 
 | Key | Purpose and default |
@@ -633,9 +699,9 @@ Start from `config/fusemoe.yaml` and use an all-record deterioration split. Set
 sequence encoder.
 
 The routing, expert and shared-expert settings in the
-[static MoE table](#static-moe-model-configuration) also apply, with `num_experts` defaulting to
+[static FuseMoE table](#static-fusemoe-model-configuration) also apply, with `num_experts` defaulting to
 `7`. Supported routers are `joint`, `permod` and `disjoint`. The combination routing settings apply
-only to the static MoE model.
+only to the static FuseMoE model.
 
 | Key under `model` | Purpose and default |
 |---|---|
@@ -889,7 +955,7 @@ and `shap_manifest.json`. The files depend on `--exp-mode`.
 
 [![SHAP heatmap of the top tabular features across synthetic deterioration test patients](assets/results_explain_heatmap.png)](assets/results_explain_heatmap.png)
 
-<figcaption style="color: #263238;">Example <code>--summary-plot heatmap</code> output for the static MoE model trained on synthetic deterioration data. Each column is a test patient and each row a feature, coloured by SHAP value. The f(x) line above shows each patient's predicted probability. Patients with similar explanations are grouped together.</figcaption>
+<figcaption style="color: #263238;">Example <code>--summary-plot heatmap</code> output for a static FuseMoE model trained on synthetic deterioration data. Each column is a test patient and each row a feature, coloured by SHAP value. The f(x) line above shows each patient's predicted probability. Patients with similar explanations are grouped together.</figcaption>
 </figure>
 
 <figure markdown="1" style="max-width: 420px; margin: 1rem auto; padding: 0.5rem; background: #fff; color: #263238;">

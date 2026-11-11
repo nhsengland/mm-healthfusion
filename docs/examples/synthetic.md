@@ -91,7 +91,7 @@ model:
 - **Data:** the parquet records of both pathways, example patients, each modality's format,
   missingness plots, PyTorch samples from `DeteriorationDataset` and `HospitalisationDataset`, and
   collated batches.
-- **Model training:** a full run of the static MoE model on the deterioration files with
+- **Model training:** a full run of the static FuseMoE model on the deterioration files with
   `config/smp.yaml`, with its training curves.
 - **Model evaluation:** the test predictions and the metrics of the best checkpoint on each split.
 - **Model interpretation:** MM-SHAP modality contributions, the tabular feature SHAP heatmap and a
