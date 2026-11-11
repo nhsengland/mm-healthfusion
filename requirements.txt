@@ -658,7 +658,7 @@ torchvision==0.20.1+cu121 ; (platform_machine == 'x86_64' and sys_platform == 'l
     #   torchxrayvision
 torchxrayvision==1.4.0
     # via mm-healthfusion
-tornado==6.4
+tornado==6.5.10
     # via
     #   ipykernel
     #   jupyter-client
