@@ -132,7 +132,7 @@ See the preparation and splitting reference for
 
 ## Model training and evaluation
 
-### Multi-modal learning
+### Multimodal learning
 
 Choose a model and replace `path/to/split` with the split directory printed during dataset
 preparation. The following deterioration commands use the average-record split above for **static**
@@ -194,7 +194,7 @@ The run directory contains the checkpoint and results used by the analysis steps
 
 See [run logs and checkpoints](api_reference.md#run-logs-and-checkpoints) for more details.
 
-### Multi-modal evaluation
+### Multimodal evaluation
 
 Training writes test predictions and metrics. To estimate confidence intervals for those metrics,
 replace `/path/to/your/run` with the printed run directory and run

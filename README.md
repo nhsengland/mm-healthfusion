@@ -1,4 +1,4 @@
-# mm-healthfusion: building multi-modal patient representations for clinical prediction
+# mm-healthfusion: building multimodal patient representations for clinical prediction
 
 ## NHSE PhD internship project
 
@@ -11,7 +11,7 @@
 [![Python 3.10 | 3.11](https://img.shields.io/badge/python-3.10%20%7C%203.11-blue)](pyproject.toml)
 [![Licence: MIT](https://img.shields.io/badge/licence-MIT-green)](LICENCE)
 
-**mm-healthfusion** explores fairness and explainability in multi-modal healthcare prediction. It
+**mm-healthfusion** explores fairness and explainability in multimodal healthcare prediction. It
 builds on the MM-HealthFair project and supports two workflows using linked MIMIC datasets:
 
 - **Deterioration:** prediction from the first 90 minutes of an emergency department stay, using

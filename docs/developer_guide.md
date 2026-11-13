@@ -64,7 +64,7 @@ loss. Dataset-level multi-task masks do not imply multi-task training support.
 The model factory supports these five names. Factory availability alone does not establish
 compatibility with every task. The supplied temporal FuseMoE and mTAND-M3Care examples use raw time series
 from an `all`-record deterioration bundle. The supplied hospitalisation models use their named
-window-specific blocks. See [Getting started](getting_started.md#multi-modal-learning) for
+window-specific blocks. See [Getting started](getting_started.md#multimodal-learning) for
 configurations.
 
 ### Concatenation

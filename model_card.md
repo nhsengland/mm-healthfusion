@@ -36,7 +36,7 @@ mode, and their weights are not updated during fusion-model training:
 Trainable modality encoders map the prepared inputs into the representations used by each fusion
 model. Missingness handling, M3Care contrastive objectives and encoder freezing depend on the
 configuration. See the [developer guide](docs/developer_guide.md#fusion-models) for architecture
-details and the [getting started guide](docs/getting_started.md#multi-modal-learning) for supported
+details and the [getting started guide](docs/getting_started.md#multimodal-learning) for supported
 training configurations.
 
 ## Model use
