@@ -480,7 +480,7 @@ python-dateutil==2.9.0.post0
     #   pandas
 python-discovery==1.9.5
     # via virtualenv
-pytorch-lightning==2.2.4
+pytorch-lightning==2.6.1
     # via lightning
 pytz==2024.1
     # via pandas
