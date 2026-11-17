@@ -36,5 +36,5 @@ Training prints the run directory. Use its checkpoint in the
 and split a separate bundle using `--record all`.
 
 See the [API reference](../api_reference.md#deterioration-preparation-and-splitting) for
-options and outputs, and [Getting started](../getting_started.md#multi-modal-learning) for other
+options and outputs, and [Getting started](../getting_started.md#multimodal-learning) for other
 model configurations.

@@ -3,7 +3,7 @@
 Clinical decisions draw on a record built from many sources: medical history, vital signs and
 laboratory tests, ECGs, chest X-rays and clinical notes. Together, these sources give a fuller
 picture of a patient's condition, but some are missing and measurements arrive at uneven times.
-We built **mm-healthfusion** to combine these multi-modal records and study how well models predict
+We built **mm-healthfusion** to combine these multimodal records and study how well models predict
 clinical outcomes when the available information varies. Our current retrospective evaluations use
 the **[MIMIC-IV](https://physionet.org/content/mimiciv/3.1/)** dataset and linked datasets from one
 US medical centre.
@@ -35,7 +35,7 @@ workflow.
 | Deterioration | The first 90 minutes of an ED stay: tabular EHR features, vital signs, laboratory measurements, ECG and available chest X-rays | Mechanical ventilation, cardiac arrest, one-day mortality, ICU admission within 24 hours and ICU admission during the hospital stay |
 | Hospitalisation | Current and legacy observation windows: static EHR features, vital signs, laboratory measurements, ECG, chest X-rays and previous-admission notes | Extended hospital stay over seven days, in-hospital death and non-home discharge |
 
-## Multi-modal pipeline
+## Multimodal pipeline
 
 We start by choosing a pathway, outcome, record format, fusion method and training settings. For
 each pathway, we prepare a cohort that combines structured records and vitals and lab measurements

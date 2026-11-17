@@ -134,7 +134,7 @@ time series, which only an all-record bundle (`--record all`) provides.
 Training also evaluates the model. It prints the run directory, which holds the best checkpoint,
 `metrics.csv` with the metrics of that checkpoint on each split, and `test_predictions.csv` with one
 row per test record. The explanation and fairness steps below read these runs. See
-[Getting started](../getting_started.md#multi-modal-learning) for the model configurations and the
+[Getting started](../getting_started.md#multimodal-learning) for the model configurations and the
 [API reference](../api_reference.md) for all options.
 
 ---
