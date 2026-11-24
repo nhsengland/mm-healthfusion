@@ -562,7 +562,7 @@ seaborn==0.13.2
     #   statannotations
 sentry-sdk==2.1.1
     # via wandb
-setuptools==68.2.2
+setuptools==84.1.0
     # via
     #   confidenceinterval
     #   lightning-utilities
