@@ -718,7 +718,7 @@ urllib3==2.2.1
     # via
     #   requests
     #   sentry-sdk
-virtualenv==21.14.5
+virtualenv==21.14.13
     # via pre-commit
 wandb==0.27.0
     # via mm-healthfusion
